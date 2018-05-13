@@ -4,7 +4,7 @@ Simply parses a given folder location and finds images that are likely duplicate
 
 ## How To Use
 
- -> add picture with arrows here
+![screenshot of program](screen.png)
 
 ## How To Compile
 
