@@ -1,7 +1,7 @@
 #include "imageinfo.h"
 
-#define numPartsDiff_allowed 3
-#define numDiffPerPartAllowed 15
+#define numPartsDiff_allowed 3 // how many pixels per image pair are allowed to be different
+#define numDiffPerPartAllowed 15 //how different the avereaged pixels are allowed to be
 bool ImageInfo::collidesWith(ImageInfo& other){
 	int numPartsDiff = 0; // number of average boxes that can be different and still not collide
 	for(int x=0; x<9*9; x++){
