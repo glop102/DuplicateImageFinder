@@ -11,6 +11,8 @@ ImageLibrary::ImageLibrary() : QObject(0){
             //the library is too old and we will not support it
             //there is an error with the calculation of the average pixel values in previous versions
             //as such it is uncorrectable and will just need to be done from scratch anyways
+			printf("Library Version Number %d is too old and cannot be upgraded\n",version.toInt());
+			printf("A new library will be created\n");
         }else if(version.toInt() == 2){
             // we could open the file so here we go
             QRegExp matchNewline("\n");
@@ -125,7 +127,7 @@ void ImageLibrary::findNewFiles_recur(QString filePath){
 	//this is a recursive function
 	//every sub-folder gets called into this
 
-	QRegExp fileFilter("^.*((.png)|(.jpg))+$",Qt::CaseInsensitive);
+	QRegExp fileFilter("^.*((.png)|(.jpg)|(.jpeg)|(.bmp)|(.ppm)|(.xbm)|(.xpm))+$",Qt::CaseInsensitive);
 	QDir d(filePath);
 	QFileInfoList files = d.entryInfoList();
 
@@ -143,10 +145,12 @@ void ImageLibrary::findNewFiles_recur(QString filePath){
 				continue;
 			}
 
-			QImage im(files[x].absoluteFilePath()); // just testing the time it takes to do this
+			QImage im(files[x].absoluteFilePath());
 			if(im.isNull()){
 				//we have failed to load the image
 				printf("Failed to load %s\n",files[x].fileName().toStdString().c_str());
+			}else if(im.width()<10 || im.height()<10){ // our algo can't open images less than 10x10 pixels
+				printf("Image size is invalid - %dx%d\n",im.width(),im.height());
 			}else{
 				emit newImageParsed(im);
 
@@ -168,11 +172,11 @@ void ImageLibrary::findNewFiles_recur(QString filePath){
 						for(int dy=0; dy<boxHeight; dy++){ // move along the height of the box
 							for(int dx=0; dx<boxWidth; dx++){ // and along the width
 								// we work on each quadrant of the averaging box
-								//it was simpler to have the loops go 0->width then -width -> width
+								//it was simpler to have the loops go 0->width than -width -> width
 								pix = im.pixel(center[0] + dx, center[1] + dy);
-								total[0] += (pix>>16) & 0xFF;
-								total[1] += (pix>> 8) & 0xFF;
-								total[2] += (pix>> 0) & 0xFF;
+								total[0] += (pix>>16) & 0xFF; //red
+								total[1] += (pix>> 8) & 0xFF; //green
+								total[2] += (pix>> 0) & 0xFF; //blue
 								pix = im.pixel(center[0] - dx, center[1] + dy);
 								total[0] += (pix>>16) & 0xFF;
 								total[1] += (pix>> 8) & 0xFF;
