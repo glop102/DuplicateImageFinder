@@ -149,7 +149,7 @@ void ImageLibrary::findNewFiles_recur(QString filePath){
 			if(im.isNull()){
 				//we have failed to load the image
 				printf("Failed to load %s\n",files[x].fileName().toStdString().c_str());
-			}else if(im.width()<10 || im.height()<10){ // our algo can't open images less than 10x10 pixels
+			}else if(im.width()<40 || im.height()<40){ // our algo can't open images less than 40x40 pixels
 				printf("Image size is invalid - %dx%d\n",im.width(),im.height());
 			}else{
 				emit newImageParsed(im);
@@ -158,8 +158,10 @@ void ImageLibrary::findNewFiles_recur(QString filePath){
 				i->filePath = files[x].absolutePath();
 				i->fileName = files[x].fileName();
 				//calculate the values for the image
-				int boxWidth = (im.width()  / 10) / 4; // we have 10 segments and we only want the box to be 1/4 the size around the center
-				int boxHeight= (im.height() / 10) / 4;
+				int boxWidth = im.width()>=40 ? (im.width()  / 10) / 4
+											  : (im.width()  / 10) ;
+				int boxHeight= im.height()>=40 ? (im.height()  / 10) / 4
+											   : (im.height()  / 10) ;
 				for(int y=0; y<9; y++){ // go from the first row to the last row for making our sample boxes - of which we have 9
 					for(int xx=0; xx<9; xx++){ // same for columns
 						//know the center of our averaging box
