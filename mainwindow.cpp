@@ -161,6 +161,7 @@ void MainWindow::collisionAction(){
 void MainWindow::doneWithCurrentDirectory(){
 	setDisplayState(SELECT_LOCATION);
 	imDisplay->removeAllItems(); // dont leave things on the screen
+	QMessageBox::information(this,"Done Processing","This Directory is Done");
 }
 
 void MainWindow::setDisplayState(DisplayState state){

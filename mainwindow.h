@@ -9,6 +9,7 @@
 #include <QDir>
 #include <QFileDialog>
 #include <QShortcut>
+#include <QMessageBox>
 #include "imagelibrary.h"
 #include "scrollableimagedisplay.h"
 
